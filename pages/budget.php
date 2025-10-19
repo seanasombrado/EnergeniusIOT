@@ -405,7 +405,7 @@ if (isset($_SESSION['user_id'])) {
                                     <label for="budget" class="block text-sm font-medium text-gray-700 dark:text-gray-400">
                                         Budget Amount (₱)
                                     </label>
-                                    <input type="number" id="budget-input" value="100" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" min="0" step="0.01" placeholder="Enter amount in PHP">
+                                    <input type="number" id="budget-input" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100" min="0" step="0.01" placeholder="Enter amount in PHP">
                                 </div>
                             </div>
                         </div>
@@ -426,66 +426,78 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-        const savedTheme = '<?php echo $savedTheme; ?>'; 
-        if (savedTheme && savedTheme !== 'dark') {
-            setTheme(savedTheme); 
-        }
+    // FIX: Using json_encode for safe PHP to JS variable passing.
+    // Dito dapat matatapos ang Syntax Error.
+    const savedTheme = <?php echo json_encode($savedTheme ?? 'light'); ?>; 
+    if (savedTheme && savedTheme !== 'dark') {
+        setTheme(savedTheme); 
+    }
+
     // --- GLOBAL STATE VARIABLES ---
     let budget = 0;
     let currentBill = 0;
     let projectedBill = 0;
 
-    // --- DOM ELEMENTS ---
-    const budgetAmountEl = document.getElementById('budget-amount');
-    const currentBillAmountEl = document.getElementById('current-bill-amount');
-    const projectedBillAmountEl = document.getElementById('projected-bill-amount');
-    const progressBarEl = document.getElementById('progress-bar');
-    const currentUsageLabelEl = document.getElementById('current-usage-label');
-    const maxBudgetLabelEl = document.getElementById('max-budget-label');
-    const currentBillPercentEl = document.getElementById('current-bill-percent');
-    const remainingBudgetEl = document.getElementById('remaining-budget');
-    const projectedBillPercentEl = document.getElementById('projected-bill-percent');
-    const projectedOverBudgetEl = document.getElementById('projected-over-budget');
-    const modalEl = document.getElementById('budget-modal');
-    const setBudgetBtn = document.getElementById('set-budget-btn');
-    const saveBudgetBtn = document.getElementById('save-budget-btn');
-     const weekBtn = document.getElementById('week-btn');
-        const monthBtn = document.getElementById('month-btn');
-
     // --- SAMPLE CHART DATA (can be replaced later with DB data) ---
-    const weeklyConsumptionData = [];
-    const monthlyConsumptionData = [];
-
+    const weeklyConsumptionData = [
+        { day: 'Mon', cost: 15.5 },
+        { day: 'Tue', cost: 12.3 },
+        { day: 'Wed', cost: 18.0 },
+        { day: 'Thu', cost: 14.5 },
+        { day: 'Fri', cost: 19.8 },
+        { day: 'Sat', cost: 22.1 },
+        { day: 'Sun', cost: 20.9 }
+    ];
+    const monthlyConsumptionData = [
+        { month: 'W1', cost: 120.0 },
+        { month: 'W2', cost: 150.0 },
+        { month: 'W3', cost: 135.0 },
+        { month: 'W4', cost: 160.0 }
+    ];
 
     let dailyChart;
 
     // --- FETCH DATA FROM DATABASE ---
     function loadBudgetData() {
        fetch('../controllers/budgetController.php?action=getBudget')
-  .then(res => res.json())
-  .then(data => {
-      if(data.success) {
-          budget = data.budget;
-          currentBill = data.currentBill;
-          projectedBill = data.projectedBill;
-          updateUI();
-      } else {
-          console.warn(data.message);
-      }
-  })
-  .catch(err => console.error('Error fetching budget data:', err));
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                // Tiyakin na ang mga value ay number/float
+                budget = parseFloat(data.budget) || 0;
+                currentBill = parseFloat(data.currentBill) || 0;
+                projectedBill = parseFloat(data.projectedBill) || 0;
+                updateUI();
+            } else {
+                console.warn(data.message);
+                // I-set sa default kung walang nakita
+                budget = 100.00; 
+                currentBill = 0.00;
+                projectedBill = 0.00;
+                updateUI();
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching budget data:', err);
+            // Default values in case of fetch error
+            budget = 100.00; 
+            currentBill = 0.00;
+            projectedBill = 0.00;
+            updateUI();
+        });
     }
 
     // --- SAVE TO DATABASE ---
     function saveBudgetToDatabase(newBudget) {
+        const saveBudgetBtn = document.getElementById('save-budget-btn'); // Local variable
         saveBudgetBtn.disabled = true;
         saveBudgetBtn.textContent = 'Saving...';
 
         const formData = new FormData();
         formData.append('action', 'saveBudget');
         formData.append('budget_amount', newBudget);
-        formData.append('current_bill', currentBill);
-        formData.append('projected_bill', projectedBill);
+        formData.append('current_bill', currentBill); // Current value
+        formData.append('projected_bill', projectedBill); // Current value
         formData.append('alert_status', 'Normal');
 
         fetch('../controllers/budgetController.php', {
@@ -495,12 +507,13 @@ if (isset($_SESSION['user_id'])) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    budget = data.budget; // Use the budget returned from the server for reliability
+                    budget = parseFloat(data.budget) || 0;
+                    currentBill = parseFloat(data.currentBill) || 0;
+                    projectedBill = parseFloat(data.projectedBill) || 0;
                     updateUI();
                     alert('Budget saved successfully!');
                     closeModal();
                 } else {
-                    // This handles the 'Not logged in' error
                     alert('Error saving budget: ' + (data.message || data.error)); 
                 }
             })
@@ -513,67 +526,66 @@ if (isset($_SESSION['user_id'])) {
                 saveBudgetBtn.textContent = 'Save Budget';
             });
     }
-  const toggleTipsBtn = document.getElementById('toggle-tips-btn');
-        const moreTipsContainer = document.getElementById('more-tips');
 
     // --- UPDATE UI ELEMENTS ---
     function updateUI() {
+        // Tiyakin na mahanap ang elements. Gawin nating local ang declarations:
+        const budgetAmountEl = document.getElementById('budget-amount');
+        const currentBillAmountEl = document.getElementById('current-bill-amount');
+        const projectedBillAmountEl = document.getElementById('projected-bill-amount');
+        const progressBarEl = document.getElementById('progress-bar');
+        const currentUsageLabelEl = document.getElementById('current-usage-label');
+        const maxBudgetLabelEl = document.getElementById('max-budget-label');
+        const currentBillPercentEl = document.getElementById('current-bill-percent');
+        const remainingBudgetEl = document.getElementById('remaining-budget');
+        const projectedBillPercentEl = document.getElementById('projected-bill-percent');
+        const projectedOverBudgetEl = document.getElementById('projected-over-budget');
+
         const currentPercentage = budget > 0 ? (currentBill / budget) * 100 : 0;
         const projectedPercentage = budget > 0 ? (projectedBill / budget) * 100 : 0;
         const remaining = budget - currentBill;
 
-        budgetAmountEl.textContent = `₱${budget.toFixed(2)}`;
-        currentBillAmountEl.textContent = `₱${currentBill.toFixed(2)}`;
-        projectedBillAmountEl.textContent = `₱${projectedBill.toFixed(2)}`;
-        currentUsageLabelEl.textContent = `₱${currentBill.toFixed(2)}`;
-        maxBudgetLabelEl.textContent = `₱${budget.toFixed(2)}`;
+        // Display updates
+        if(budgetAmountEl) budgetAmountEl.textContent = `₱${budget.toFixed(2)}`;
+        if(currentBillAmountEl) currentBillAmountEl.textContent = `₱${currentBill.toFixed(2)}`;
+        if(projectedBillAmountEl) projectedBillAmountEl.textContent = `₱${projectedBill.toFixed(2)}`;
+        if(currentUsageLabelEl) currentUsageLabelEl.textContent = `₱${currentBill.toFixed(2)}`;
+        if(maxBudgetLabelEl) maxBudgetLabelEl.textContent = `₱${budget.toFixed(2)}`;
 
-        progressBarEl.style.width = `${Math.min(currentPercentage, 100)}%`;
-        progressBarEl.style.backgroundColor = 
-            currentPercentage > 100 ? 'red' :
-            currentPercentage > 80 ? '#f59e0b' :
-            '#2563eb';
+        // Progress Bar
+        if(progressBarEl) {
+            progressBarEl.style.width = `${Math.min(currentPercentage, 100)}%`;
+            progressBarEl.style.backgroundColor = 
+                currentPercentage > 100 ? 'red' :
+                currentPercentage > 80 ? '#f59e0b' :
+                '#2563eb';
+        }
 
-        currentBillPercentEl.textContent = `${currentPercentage.toFixed(0)}% of your monthly budget`;
-        remainingBudgetEl.textContent = `₱${remaining.toFixed(2)} remaining`;
-        projectedBillPercentEl.textContent = `Projected to be ${projectedPercentage.toFixed(0)}% of your budget`;
+        // Percentage and Remaining
+        if(currentBillPercentEl) currentBillPercentEl.textContent = `${currentPercentage.toFixed(0)}% of your monthly budget`;
+        if(remainingBudgetEl) remainingBudgetEl.textContent = `₱${remaining.toFixed(2)} remaining`;
+        if(projectedBillPercentEl) projectedBillPercentEl.textContent = `Projected to be ${projectedPercentage.toFixed(0)}% of your budget`;
 
+        // Projected Over Budget Alert
         if (projectedBill > budget) {
             const overBudgetAmount = projectedBill - budget;
-            projectedOverBudgetEl.textContent = `₱${overBudgetAmount.toFixed(2)} over budget`;
-            projectedOverBudgetEl.classList.remove('hidden');
+            if(projectedOverBudgetEl) {
+                 projectedOverBudgetEl.textContent = `₱${overBudgetAmount.toFixed(2)} over budget`;
+                 projectedOverBudgetEl.classList.remove('hidden');
+            }
         } else {
-            projectedOverBudgetEl.classList.add('hidden');
+            if(projectedOverBudgetEl) projectedOverBudgetEl.classList.add('hidden');
         }
     }
 
-    // --- INITIALIZATION ---
-    document.addEventListener('DOMContentLoaded', () => {
-        loadBudgetData();
-        initializeChart();
-    });
-  function updateChart(view) {
-            let data, labels;
-            if (view === 'week') {
-                data = weeklyConsumptionData.map(d => d.cost);
-                labels = weeklyConsumptionData.map(d => d.day);
-                weekBtn.classList.add('bg-blue-50', 'text-blue-600');
-                monthBtn.classList.remove('bg-blue-50', 'text-blue-600');
-            } else if (view === 'month') {
-                data = monthlyConsumptionData.map(d => d.cost);
-                labels = monthlyConsumptionData.map(d => d.month);
-                monthBtn.classList.add('bg-blue-50', 'text-blue-600');
-                weekBtn.classList.remove('bg-blue-50', 'text-blue-600');
-            }
-
-            dailyChart.data.labels = labels;
-            dailyChart.data.datasets[0].data = data;
-            dailyChart.update();
-        }
     // --- CHART SETUP ---
     function initializeChart() {
-        const ctx = document.getElementById('daily-consumption-chart').getContext('2d');
-        dailyChart = new Chart(ctx, {
+        const ctx = document.getElementById('daily-consumption-chart');
+        if (!ctx) return; // Exit if chart canvas is not found
+        
+        const chartContext = ctx.getContext('2d');
+        
+        dailyChart = new Chart(chartContext, {
             type: 'bar',
             data: {
                 labels: weeklyConsumptionData.map(d => d.day),
@@ -600,41 +612,106 @@ if (isset($_SESSION['user_id'])) {
                 }
             }
         });
+        updateChart('week'); // Initial view is 'week'
+    }
+    
+    // CHART Update Function (for week/month buttons)
+    function updateChart(view) {
+        const weekBtn = document.getElementById('week-btn');
+        const monthBtn = document.getElementById('month-btn');
+        let data, labels;
+        
+        if (view === 'week') {
+            data = weeklyConsumptionData.map(d => d.cost);
+            labels = weeklyConsumptionData.map(d => d.day);
+            if(weekBtn) weekBtn.classList.add('bg-blue-50', 'text-blue-600');
+            if(monthBtn) {
+                 monthBtn.classList.remove('bg-blue-50', 'text-blue-600', 'hover:bg-gray-100');
+                 monthBtn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            }
+        } else if (view === 'month') {
+            data = monthlyConsumptionData.map(d => d.cost);
+            labels = monthlyConsumptionData.map(d => d.month);
+            if(monthBtn) monthBtn.classList.add('bg-blue-50', 'text-blue-600');
+            if(weekBtn) {
+                 weekBtn.classList.remove('bg-blue-50', 'text-blue-600', 'hover:bg-gray-100');
+                 weekBtn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            }
+        }
+        
+        if (dailyChart) {
+            dailyChart.data.labels = labels;
+            dailyChart.data.datasets[0].data = data;
+            dailyChart.update();
+        }
     }
 
-    // --- MODAL CONTROLS ---
-    function openModal() {
-        document.getElementById('budget-input').value = budget || '';
-        modalEl.classList.remove('hidden');
-    }
-
+    // --- MODAL CONTROL FUNCTIONS ---
+    // Panatilihin lang ito para sa onclick event sa Cancel button ng modal (HTML)
     function closeModal() {
-        modalEl.classList.add('hidden');
+        const modalEl = document.getElementById('budget-modal');
+        if(modalEl) modalEl.classList.add('hidden');
     }
 
-    setBudgetBtn.addEventListener('click', openModal);
 
-    saveBudgetBtn.addEventListener('click', () => {
-        const newBudget = parseFloat(document.getElementById('budget-input').value);
-        if (!isNaN(newBudget) && newBudget > 0) {
-            saveBudgetToDatabase(newBudget);
-        } else {
-            alert('Please enter a valid budget amount.');
+    // --- INITIALIZATION AND EVENT LISTENERS ---
+    // KRITIKAL: Siguraduhin na ang lahat ng element ay nakuha DITO
+    document.addEventListener('DOMContentLoaded', () => {
+        // Declaration of elements
+        const modalEl = document.getElementById('budget-modal');
+        const setBudgetBtn = document.getElementById('set-budget-btn');
+        const saveBudgetBtn = document.getElementById('save-budget-btn');
+        const budgetInput = document.getElementById('budget-input');
+        const weekBtn = document.getElementById('week-btn');
+        const monthBtn = document.getElementById('month-btn');
+        const toggleTipsBtn = document.getElementById('toggle-tips-btn');
+        const moreTipsContainer = document.getElementById('more-tips');
+
+        // *** PANGHULI AT PINAKAMAHALAGANG CHECK ***
+        if (!setBudgetBtn) {
+            console.error("CRITICAL: 'Set New Budget' button not found. Check ID.");
+            return; 
+        }
+        
+        loadBudgetData();
+        initializeChart();
+
+
+        // 1. SET NEW BUDGET BUTTON (Ito ang nagbubukas ng modal)
+        setBudgetBtn.addEventListener('click', () => {
+            if(budgetInput && budget > 0) budgetInput.value = budget;
+            if(modalEl) modalEl.classList.remove('hidden');
+        });
+
+        // 2. SAVE BUDGET BUTTON (Ito ang nagse-save sa database)
+        if(saveBudgetBtn) {
+            saveBudgetBtn.addEventListener('click', () => {
+                const newBudget = parseFloat(budgetInput.value);
+                if (!isNaN(newBudget) && newBudget > 0) {
+                    saveBudgetToDatabase(newBudget);
+                } else {
+                    alert('Please enter a valid budget amount greater than zero.');
+                }
+            });
+        }
+
+        // 3. CHART VIEW BUTTONS
+        if(weekBtn) weekBtn.addEventListener('click', () => updateChart('week'));
+        if(monthBtn) monthBtn.addEventListener('click', () => updateChart('month'));
+
+        // 4. TOGGLE TIPS BUTTON
+        if(toggleTipsBtn && moreTipsContainer) {
+            toggleTipsBtn.addEventListener('click', () => {
+                if (moreTipsContainer.classList.contains('hidden')) {
+                    moreTipsContainer.classList.remove('hidden');
+                    toggleTipsBtn.textContent = 'Hide some tips';
+                } else {
+                    moreTipsContainer.classList.add('hidden');
+                    toggleTipsBtn.textContent = 'View all saving tips';
+                }
+            });
         }
     });
-      weekBtn.addEventListener('click', () => updateChart('week'));
-        monthBtn.addEventListener('click', () => updateChart('month'));
-
-        // Event listener for toggling saving tips
-        toggleTipsBtn.addEventListener('click', () => {
-            if (moreTipsContainer.classList.contains('hidden')) {
-                moreTipsContainer.classList.remove('hidden');
-                toggleTipsBtn.textContent = 'Hide some tips';
-            } else {
-                moreTipsContainer.classList.add('hidden');
-                toggleTipsBtn.textContent = 'View all saving tips';
-            }
-        });
 
 </script>
 
