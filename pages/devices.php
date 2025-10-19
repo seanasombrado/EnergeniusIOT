@@ -31,8 +31,6 @@ if (isset($_SESSION['user_id'])) {
         // Handle error (e.g., logging it), but keep the default theme ('light')
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -107,16 +105,7 @@ if (isset($_SESSION['user_id'])) {
                                     </svg>
                                     Schedule
                                 </button>
-                                <button id="global-history-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                                    </svg>
-                                    History
-                                </button>
-                            </div>
+                                </div>
                         </div>
                     
                         <div class="bg-white rounded-lg shadow-sm dark:bg-gray-800">
@@ -153,22 +142,8 @@ if (isset($_SESSION['user_id'])) {
   </div>
 </div>
 
-<div id="global-history-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
-  <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
-    <div class="flex justify-between items-center">
-      <h3 class="text-xl md:text-2xl font-semibold text-blue-600">All Device History</h3>
-      <button id="global-history-close" class="text-gray-400 hover:text-gray-600">
-        ✕
-      </button>
-    </div>
-    <ul id="global-history-list" class="space-y-3 max-h-[60vh] overflow-y-auto">
-      </ul>
-  </div>
-</div>
-
-
-    <div id="schedule-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white text-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
+<div id="schedule-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white text-gray-800 rounded-lg shadow-xl max-w-3xl w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
             <div class="flex justify-between items-center">
                 <h3 class="text-xl md:text-2xl font-semibold text-blue-600">Scheduled Actions</h3>
                 <button id="schedule-close-btn" class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -179,97 +154,64 @@ if (isset($_SESSION['user_id'])) {
                 </button>
             </div>
             
-            <div class="mt-4 space-y-4">
-    <div>
-        <label for="start-time" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Turn ON Time</label>
-        <input type="time" id="start-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-    </div>
-    <div>
-        <label for="end-time" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Turn OFF Time</label>
-        <input type="time" id="end-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-    </div>
-    <div>
-        <label for="recurrence" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Recurrence</label>
-        <div class="flex flex-wrap gap-2 mt-1">
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Mon" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Mon</span>
-            </label>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Tue" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Tue</span>
-            </label>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Wed" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Wed</span>
-            </label>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Thu" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Thu</span>
-            </label>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Fri" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Fri</span>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Sat" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400"> Sat </span>
-            </label>
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="recurrence[]" value="Sun" class="form-checkbox">
-                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Sun</span>
-            </label>
-        </div>
-    </div>
-    <button id="schedule-add-btn" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-        Set Schedule
-    </button>
-</div>
-
-<div class="mt-6">
-    <h4 class="text-lg font-medium text-gray-800">Existing Schedules</h4>
-    <ul id="scheduled-actions-list" class="mt-3 space-y-3">
-        </ul>
-</div>
-        </div>
-    </div>
-
-    <div id="history-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white text-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
-            <div class="flex justify-between items-center">
-                <h3 id="history-title" class="text-xl md:text-2xl font-semibold text-blue-600">History</h3>
-                <button id="history-close-btn" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="w-full">
-                <h4 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-400">Daily Energy Usage</h4>
-                <div id="history-usage-chart" class="h-48 flex items-end justify-between space-x-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="mt-4 space-y-4">
+                    <div>
+                        <label for="start-time" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Turn ON Time</label>
+                        <input type="time" id="start-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                     </div>
-                <div class="flex justify-between text-gray-500 text-sm mt-2">
-                    <span class="w-1/7 text-center">M</span>
-                    <span class="w-1/7 text-center">T</span>
-                    <span class="w-1/7 text-center">W</span>
-                    <span class="w-1/7 text-center">T</span>
-                    <span class="w-1/7 text-center">F</span>
-                    <span class="w-1/7 text-center">S</span>
-                    <span class="w-1/7 text-center">S</span>
+                    <div>
+                        <label for="end-time" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Turn OFF Time</label>
+                        <input type="time" id="end-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="recurrence" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Recurrence</label>
+                        <div class="flex flex-wrap gap-2 mt-1">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Mon" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Mon</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Tue" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Tue</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Wed" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Wed</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Thu" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Thu</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Fri" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Fri</span>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Sat" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400"> Sat </span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="recurrence[]" value="Sun" class="form-checkbox">
+                                <span class="ml-2 text-sm text-gray-700 dark:text-gray-400">Sun</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button id="schedule-add-btn" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Set Schedule
+                    </button>
                 </div>
-            </div>
 
-            <div class="w-full">
-                <h4 class="text-lg font-medium text-gray-800 mb-4 dark:text-gray-400">Recent Activity</h4>
-                <ul id="history-activity-list" class="space-y-3 max-h-60 overflow-y-auto ">
+                <div class="mt-4 md:mt-0">
+                    <h4 class="text-lg font-medium text-gray-800">Existing Schedules</h4>
+                    <ul id="scheduled-actions-list" class="mt-3 space-y-3 max-h-72 overflow-y-auto pr-2">
                     </ul>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="settings-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white text-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
+        <div class="bg-white text-gray-800 rounded-lg shadow-xl max-w-3xl w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
             <div class="flex justify-between items-center">
                 <h3 id="settings-title" class="text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400">Device Settings</h3>
                 <button id="settings-close-btn" class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -281,25 +223,22 @@ if (isset($_SESSION['user_id'])) {
             </div>
             
             <form class="space-y-4" id="settings-form">
-                <div>
-                    <label for="device-name" class="block text-sm font-medium text-gray-500 dark:text-gray-400">Device Name</label>
-                    <input type="text" id="settings-device-name" name="deviceName" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:ring-blue-500 focus:border-blue-500 transition-colors" />
-                </div>
-                <div>
-                    <label for="device-location" class="block text-sm font-medium text-gray-500 dark:text-gray-400">Location</label>
-                    <select id="settings-device-location" name="deviceLocation" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none pr-8">
-                        </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="device-name" class="block text-sm font-medium text-gray-500 dark:text-gray-400">Device Name</label>
+                        <input type="text" id="settings-device-name" name="deviceName" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:ring-blue-500 focus:border-blue-500 transition-colors" />
+                    </div>
+                    <div class="relative">
+                        <label for="device-location" class="block text-sm font-medium text-gray-500 dark:text-gray-400">Location</label>
+                        <select id="settings-device-location" name="deviceLocation" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none pr-8">
+                            </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none mt-7">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <label for="device-consumption" class="block text-sm font-medium text-gray-500 dark:text-gray-400">Estimated Daily Energy Use (in kWh)</label>
-                    <input type="number" id="settings-device-consumption" name="deviceConsumption" step="0.1" min="0" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:ring-blue-500 focus:border-blue-500 transition-colors" />
-                </div>
-                
                 <div class="flex items-center justify-between pt-4">
                     <button id="delete-device-btn" type="button" class="text-red-500 hover:text-red-700 text-sm font-medium transition-colors">
                         Delete Device
@@ -312,27 +251,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
     
-    <div id="details-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white text-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 p-6 md:p-8 space-y-6 dark:bg-gray-800">
-            <div class="flex justify-between items-center pb-4 border-b border-gray-200">
-                <h3 id="details-title" class="text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400">Detailed Report</h3>
-                <button id="details-close-btn" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div id="details-container" class="overflow-y-auto max-h-[70vh] space-y-8">
-                </div>
-        </div>
-    </div>
-
-
-
-
-
-<script>
+    <script>
     
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -344,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let devices = [];
 // Initialize as an empty array
 
-    const mockHistoryData = [];
     const mockLocations = ['Living Room', 'Kitchen', 'Bedroom', 'Bathroom', 'Laundry Room', 'Office', 'Garage'];
     const tabs = [
         { id: 'all', label: 'All Devices' },
@@ -364,45 +282,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Schedule modal elements
     const scheduleModal = document.getElementById('schedule-modal');
     const scheduleCloseBtn = document.getElementById('schedule-close-btn');
-    const scheduleTimeInput = document.getElementById('schedule-time');
-    const scheduleActionSelect = document.getElementById('schedule-action');
+    const scheduleTimeInput = document.getElementById('schedule-time'); // Not used in HTML but kept for reference
+    const scheduleActionSelect = document.getElementById('schedule-action'); // Not used in HTML but kept for reference
     const scheduleAddBtn = document.getElementById('schedule-add-btn');
     const scheduledActionsList = document.getElementById('scheduled-actions-list');
-// History modal elements
-    const historyModal = document.getElementById('history-modal');
-    const historyCloseBtn = document.getElementById('history-close-btn');
-    const historyTitle = document.getElementById('history-title');
-    const historyUsageChart = historyModal.querySelector('#history-usage-chart');
-    const historyActivityList = document.getElementById('history-activity-list');
-
+// REMOVED: History modal elements
     // Settings modal elements
     const settingsModal = document.getElementById('settings-modal');
     const settingsCloseBtn = document.getElementById('settings-close-btn');
     const settingsForm = document.getElementById('settings-form');
     const settingsDeviceNameInput = document.getElementById('settings-device-name');
     const settingsDeviceLocationSelect = document.getElementById('settings-device-location');
-    const settingsDeviceConsumptionInput = document.getElementById('settings-device-consumption');
     const deleteDeviceBtn = document.getElementById('delete-device-btn');
     
-    // Details modal elements
-    const detailsModal = document.getElementById('details-modal');
-    const detailsCloseBtn = document.getElementById('details-close-btn');
-    const detailsTitle = document.getElementById('details-title');
-    const detailsContainer = document.getElementById('details-container');
+    // REMOVED: Details modal elements
 
     const deviceSearchInput = document.getElementById('device-search');
 // Global modal elements
 const globalScheduleBtn = document.getElementById('global-schedule-btn');
-const globalHistoryBtn = document.getElementById('global-history-btn');
+// REMOVED: globalHistoryBtn
 const globalScheduleModal = document.getElementById('global-schedule-modal');
-const globalHistoryModal = document.getElementById('global-history-modal');
+// REMOVED: globalHistoryModal
 const globalScheduleClose = document.getElementById('global-schedule-close');
-const globalHistoryClose = document.getElementById('global-history-close');
+// REMOVED: globalHistoryClose
 const globalScheduleList = document.getElementById('global-schedule-list');
-const globalHistoryList = document.getElementById('global-history-list');
+// REMOVED: globalHistoryList
 
-// Example global activity log (mock)
-let globalHistory = [];
 
 // Example global schedule log (mock)
 let globalSchedules = [];
@@ -448,57 +353,18 @@ const fetchGlobalSchedule = async () => {
         globalScheduleList.innerHTML = `<li class="text-center text-red-500 p-4">Error fetching schedules: ${error.message}</li>`;
     }
 };
-// Render global history
-const renderGlobalHistory = () => {
-  globalHistoryList.innerHTML = '';
-  if (globalHistory.length === 0) {
-    globalHistoryList.innerHTML = `<li class="text-center text-gray-400 dark:text-gray-500">No global history records found.</li>`;
-    return;
-  }
-  globalHistory.forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'bg-gray-100 rounded-md p-3 flex justify-between dark:bg-gray-700';
-    li.innerHTML = `<span>${item.timestamp} - ${item.device_name}: ${item.action_type}</span>`;
-    globalHistoryList.appendChild(li);
-  });
-};
+// REMOVED: Render global history and fetchGlobalHistory
 
-const fetchGlobalHistory = async () => {
-    globalHistoryList.innerHTML = `<li class="text-center text-gray-500 p-4">Loading history...</li>`;
-
-    try {
-        const formData = new FormData();
-        formData.append('action', 'getGlobalHistory'); 
-
-        const response = await fetch('../controllers/deviceController.php', {
-            method: 'POST',
-            body: formData
-        });
-        const result = await response.json();
-
-        if (result.success) {
-            globalHistory = result.data || [];
-            renderGlobalHistory(); 
-        } else {
-            globalHistoryList.innerHTML = `<li class="text-center text-red-500 p-4">Failed to load history: ${result.message}</li>`;
-        }
-    } catch (error) {
-        globalHistoryList.innerHTML = `<li class="text-center text-red-500 p-4">Error fetching history: ${error.message}</li>`;
-    }
-};
 // Open modals
 globalScheduleBtn.addEventListener('click', () => {
   fetchGlobalSchedule();
   globalScheduleModal.classList.remove('hidden');
 });
-globalHistoryBtn.addEventListener('click', () => {
-  fetchGlobalHistory();
-  globalHistoryModal.classList.remove('hidden');
-});
+// REMOVED: globalHistoryBtn listener
 
 // Close modals
 globalScheduleClose.addEventListener('click', () => globalScheduleModal.classList.add('hidden'));
-globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.add('hidden'));
+// REMOVED: globalHistoryClose listener
 
 
     // --- RENDER FUNCTIONS ---
@@ -563,7 +429,6 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
         const deviceCard = document.createElement('div');
         const statusClass = device.status === 'on' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
         const statusLabel = device.status === 'on' ? 'Active' : 'Inactive';
-        const consumptionValue = device.status === 'on' ? `${device.consumption} kW/h` : '0 kW/h';
         const toggleBg = device.status === 'on' ? 'bg-blue-600' : 'bg-gray-200';
         const toggleTransform = device.status === 'on' ? 'translate-x-6' : 'translate-x-1';
         const footerBg = device.status === 'on' ? 'bg-blue-50' : 'bg-gray-50';
@@ -591,27 +456,18 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
                         </span>
                     </div>
                     <div class="flex justify-between text-sm mt-1">
-                        <span class="text-gray-500 dark:text-gray-400">Consumption</span>
-                        <span class="text-gray-800 dark:text-gray-400">${consumptionValue}</span>
-                    </div>
-                    <div class="flex justify-between text-sm mt-1">
                         <span class="text-gray-500 dark:text-gray-400">Last Active</span>
                         <span class="text-gray-800 dark:text-gray-400">${timeAgo(device.lastActive, device.status)}</span>
                     </div>
                 </div>
-                <div class="mt-5 flex items-center justify-between">
-                    <button data-device-id="${device.device_id}" class="view-details-btn text-sm text-blue-600 hover:text-blue-800">
-                        View Details
-                    </button>
+                <div class="mt-5 flex items-center justify-end">
                     <button data-device-id="${device.device_id}" class="toggle-switch relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${toggleBg}">
                         <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${toggleTransform}"></span>
                     </button>
                 </div>
             </div>
-            <div class="p-3 border-t border-gray-200 flex justify-between items-center dark:border-gray-600 ${footerBg}">
+            <div class="p-3 border-t border-gray-200 flex justify-end items-center space-x-4 dark:border-gray-600 ${footerBg}">
                 <button data-action="schedule" data-device-id="${device.device_id}" class="footer-btn text-sm font-medium text-gray-600 hover:text-gray-800">Schedule</button>
-                <div class="h-4 border-r border-gray-300"></div>
-                <button data-action="history" data-device-id="${device.device_id}" class="footer-btn text-sm font-medium text-gray-600 hover:text-gray-800">History</button>
                 <div class="h-4 border-r border-gray-300"></div>
                 <button data-action="settings" data-device-id="${device.device_id}" class="footer-btn text-sm font-medium text-gray-600 hover:text-gray-800">Settings</button>
             </div>
@@ -638,13 +494,7 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
              handleFooterButtonClick(deviceId, action);
             }
         });
- // Add event listener for the View Details button
-        document.querySelectorAll('.view-details-btn').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const deviceId = parseInt(event.target.dataset.deviceId);
-                showDetailsModal(deviceId);
-            });
-        });
+ // REMOVED: Event listener for the View Details button
  };
 
  deviceSearchInput.addEventListener('input', () => {
@@ -723,87 +573,7 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
      * Renders the content for the detailed report modal.
  * @param {object} device The device object to display.
      */
-    const renderDetailsModalContent = (device) => {
-        detailsTitle.textContent = `${device.name} Detailed Report`;
- detailsContainer.innerHTML = '';
-        
-        // Construct the HTML for the detailed report
-        let detailsHtml = `
-            <div>
-                <h4 class="text-lg font-medium text-gray-800 mb-4">Weekly Power Consumption (kWh)</h4>
-                <div id="weekly-usage-chart" class="h-48 flex items-end justify-between space-x-2">
-                    </div>
-  
-                <div class="flex justify-between text-gray-500 text-sm mt-2">
-                    <span class="w-1/7 text-center">M</span>
-                    <span class="w-1/7 text-center">T</span>
-                    <span class="w-1/7 text-center">W</span>
-               
-         <span class="w-1/7 text-center">T</span>
-                    <span class="w-1/7 text-center">F</span>
-                    <span class="w-1/7 text-center">S</span>
-                    <span class="w-1/7 text-center">S</span>
-                </div>
-           
-    </div>
-
-            <div class="space-y-4">
-                <h4 class="text-lg font-medium text-gray-800">Technical Specifications</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-gray-100 p-4 rounded-md">
-                        
-    <p class="text-sm text-gray-500">Type</p>
-                        <p class="font-medium text-gray-800">${device.type ||
- 'N/A'}</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-md">
-                        <p class="text-sm text-gray-500">Current Status</p>
-                        <p class="font-medium text-gray-800">${device.status === 'on' ?
- 'Active' : 'Inactive'}</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-md">
-                        <p class="text-sm text-gray-500">Location</p>
-                        <p class="font-medium text-gray-800">${device.location ||
- 'N/A'}</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-md">
-                        <p class="text-sm text-gray-500">Estimated Power Use</p>
-                        <p class="font-medium text-gray-800">${device.consumption ||
- '0'} kWh/h</p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-lg font-medium text-gray-800">Energy Usage Log</h4>
-                <div class="mt-4 space-y-3">
-                    ${device.usageLog && device.usageLog.length > 0 ?
- device.usageLog.map(log => `
-                        <div class="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
-                            <div>
-                                <p class="font-medium text-gray-800">${log.time}</p>
-                            </div>
-                            <div>
-                                <p class="font-medium text-blue-600">${log.value} kWh</p>
-                            </div>
-                        </div>
-                    `).join('') : `<p class="text-center text-gray-500 py-4">No usage history available.</p>`
-                    }
-                </div>
-            </div>
-        `;
- detailsContainer.innerHTML = detailsHtml;
-        // Render the bar chart for the details view
-        const weeklyUsageChart = document.getElementById('weekly-usage-chart');
-        if (device.weeklyUsage) {
-            const maxUsage = Math.max(...device.weeklyUsage, 1);
-            device.weeklyUsage.forEach(usage => {
-                const barHeight = (usage / maxUsage) * 100;
-                const bar = document.createElement('div');
-                bar.className = `w-1/7 h-[${barHeight}%] bg-blue-500 rounded-t-sm transition-all`;
-                weeklyUsageChart.appendChild(bar);
-            });
-        }
-    };
+    // REMOVED: renderDetailsModalContent
 
     // --- UTILS ---
     
@@ -848,11 +618,10 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
     const handleFooterButtonClick = (deviceId, action) => {
         if (action === 'schedule') {
             showScheduleModal(deviceId);
-        } else if (action === 'history') {
-            showHistoryModal(deviceId);
         } else if (action === 'settings') {
             showSettingsModal(deviceId);
         }
+        // REMOVED: History and Details logic
     };
 
     /**
@@ -862,9 +631,6 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
     const toggleDeviceStatus = async (deviceId) => {
         const device = devices.find(d => d.device_id === deviceId);
         if (!device) return;
-
-        // --- REMOVED THE CLIENT-SIDE OPTIMISTIC UPDATE
-        // The UI will now only update after a successful server response.
 
         try {
             const formData = new FormData();
@@ -888,7 +654,7 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
                 }
                 device.name = updated.device_name;
                 device.type = updated.appliance_type;
-                device.consumption = parseFloat(updated.daily_kwh);
+                // REMOVED: device.consumption update
                 device.location = updated.location;
                 // Render only once with the correct info from the server
                 renderDevices();
@@ -938,7 +704,10 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
         activeDeviceIdForSchedule = deviceId;
         const device = devices.find(d => d.device_id === deviceId);
         if (device) {
-            renderScheduledActions(device.schedules);
+            // NOTE: Schedules are not fetched on load in the new structure, 
+            // but we'll leave this to render local mock data if available 
+            // or an empty state, as the schedule logic is still active.
+            renderScheduledActions(device.schedules); 
             scheduleModal.classList.remove('hidden');
         }
     };
@@ -951,92 +720,7 @@ globalHistoryClose.addEventListener('click', () => globalHistoryModal.classList.
         activeDeviceIdForSchedule = null;
     };
 
-    /**
- * Renders the fetched activity data into the historyActivityList.
- * @param {Array} activityData - Array of objects with {action_type, timestamp}.
- */
-const renderActivityList = (activityData) => {
-    // historyActivityList is assumed to be defined globally (getElementById('history-activity-list'))
-    historyActivityList.innerHTML = '';
-    
-    if (activityData.length === 0) {
-        historyActivityList.innerHTML = `
-            <li class="p-4 text-center text-gray-500">
-                No recent activity.
-            </li>
-        `;
-        return;
-    } 
-    
-    activityData.forEach(item => {
-        const activityItem = document.createElement('li');
-        activityItem.className = "bg-gray-100 rounded-md p-4 flex justify-between items-center text-gray-800";
-        // item.action_type and item.timestamp are the keys returned by the PHP controller
-        activityItem.innerHTML = `
-            <span class="font-medium">${item.action_type}</span>
-            <span class="text-sm text-gray-500">${item.timestamp}</span>
-        `;
-        historyActivityList.appendChild(activityItem);
-    });
-};
-    /**
- * Shows the history modal and fetches real-time activity data.
- * @param {string|number} deviceId - The ID of the device to fetch history for.
- */
-const showHistoryModal = async (deviceId) => {
-    // 1. Look up device name (assuming 'devices' array is defined globally)
-    // FIX: Using device_id to find the device
-    const device = devices.find(d => d.device_id == deviceId); 
-    const deviceName = device ? device.name : 'Device';
-
-    // 2. Update Title and Set Loading State
-    historyTitle.textContent = `${deviceName} History`;
-    historyActivityList.innerHTML = `<li class="p-4 text-center text-gray-500">Loading activity...</li>`;
-    historyModal.classList.remove('hidden');
-    
-    // 3. KEEP: Render bar chart with MOCK data (since real usage data is not yet implemented)
-    // NOTE: You must update 'mockHistoryData' access if the original mock structure changed.
-    const history = mockHistoryData.find(h => h.device_id == deviceId) || { dailyUsage: [], activity: [] };
-    
-    historyUsageChart.innerHTML = '';
-    const maxUsage = Math.max(...history.dailyUsage, 1);
-    history.dailyUsage.forEach(usage => {
-        const barHeight = (usage / maxUsage) * 100;
-        const bar = document.createElement('div');
-        bar.className = `w-1/7 h-[${barHeight}%] bg-blue-500 rounded-t-sm transition-all`;
-        historyUsageChart.appendChild(bar);
-    });
-
-    // 4. NEW: Fetch Real Activity Data
-    try {
-        const formData = new FormData();
-        formData.append('action', 'getDeviceHistory'); 
-        formData.append('deviceId', deviceId); // Use the correct ID key
-
-        const response = await fetch('../controllers/deviceController.php', {
-            method: 'POST',
-            body: formData
-        });
-        const result = await response.json();
-
-        if (result.success) {
-            renderActivityList(result.data); // Render the fetched real activity data
-        } else {
-            historyActivityList.innerHTML = `<li class="p-4 text-center text-red-500">Failed to load history: ${result.message}</li>`;
-        }
-    } catch (error) {
-        historyActivityList.innerHTML = `<li class="p-4 text-center text-red-500">Error fetching history: ${error.message}</li>`;
-    }
-};
-
-// ... (The rest of your script, including hideHistoryModal)
-
-    /**
-     * Hides the history modal.
-     */
-    const hideHistoryModal = () => {
-        historyModal.classList.add('hidden');
-    };
+    // REMOVED: showHistoryModal and hideHistoryModal
 
     /**
      * Shows the settings modal for a specific device.
@@ -1048,7 +732,7 @@ const showHistoryModal = async (deviceId) => {
         if (device) {
             // Populate the form fields with the current device data
             settingsDeviceNameInput.value = device.name;
-            settingsDeviceConsumptionInput.value = device.consumption;
+            // REMOVED: settingsDeviceConsumptionInput.value = device.consumption;
             
             // Populate location dropdown
             settingsDeviceLocationSelect.innerHTML = '';
@@ -1073,29 +757,10 @@ const showHistoryModal = async (deviceId) => {
         activeDeviceIdForSettings = null;
     };
 
-    /**
-     * Shows the detailed report modal and populates its content.
-     * @param {number} deviceId The ID of the device to display.
-     */
-    const showDetailsModal = (deviceId) => {
-        const device = devices.find(d => d.device_id === deviceId);
-        if (device) {
-            renderDetailsModalContent(device);
-            detailsModal.classList.remove('hidden');
-        }
-    };
-
-    /**
-     * Hides the detailed report modal.
-     */
-    const hideDetailsModal = () => {
-        detailsModal.classList.add('hidden');
-    };
+    // REMOVED: showDetailsModal and hideDetailsModal
 
     // ----------------------------------------------------------------
     // 💡 CHANGE 1: Define fetchDevices on the global window object.
-    // This allows the Add Device modal script (in addDevicemodal.php)
-    // to call it after a successful device addition.
     // ----------------------------------------------------------------
     /**
      * Fetches the list of devices from the server and updates the UI.
@@ -1122,15 +787,11 @@ const showHistoryModal = async (deviceId) => {
                     name: d.device_name,
                     location: d.location,
                     status: d.status === 'active' ? 'on' : 'off',
-                    consumption: parseFloat(d.daily_kwh),
+                    // REMOVED: consumption property
                     type: d.appliance_type,
                     lastActive: d.last_active,
                     schedules: d.schedules || [], // Assume schedules are fetched with the device
-                    weeklyUsage: [2, 5, 3, 7, 4, 9, 6], // Mock usage for details modal
-                    usageLog: [ // Mock log for details modal
-                        { time: '2024-01-20 10:00 AM', value: 0.5 },
-                        { time: '2024-01-20 11:00 AM', value: 0.3 }
-                    ]
+                    // REMOVED: weeklyUsage and usageLog mock data
                 }));
                 renderDevices();
             } else {
@@ -1152,21 +813,19 @@ const showHistoryModal = async (deviceId) => {
 
     const deviceName = settingsDeviceNameInput.value.trim();
     const deviceLocation = settingsDeviceLocationSelect.value;
-    const deviceConsumption = settingsDeviceConsumptionInput.value;
+    // REMOVED: const deviceConsumption variable
 
-    if (!deviceName || isNaN(deviceConsumption) || parseFloat(deviceConsumption) < 0) {
-        showMessageModal('Please enter a valid device name and non-negative consumption value.');
+    if (!deviceName) {
+        showMessageModal('Please enter a valid device name.');
         return;
     }
 
     const formData = new FormData();
-    // ⬇️ CHANGE THIS LINE ⬇️
     formData.append('action', 'update'); // Must match the 'update' case in deviceController.php
-    // ⬆️ TO THIS ⬆️
     formData.append('deviceId', activeDeviceIdForSettings);
-    formData.append('deviceName', deviceName);       // NOTE: Check next section for key name fix
-    formData.append('applianceLocation', deviceLocation); // NOTE: Check next section for key name fix
-    formData.append('powerConsumption', deviceConsumption); // NOTE: Check next section for key name fix
+    formData.append('deviceName', deviceName);      
+    formData.append('applianceLocation', deviceLocation); 
+    // REMOVED: formData.append('powerConsumption', deviceConsumption); 
     
     try {
         const response = await fetch('../controllers/deviceController.php', {
@@ -1234,17 +893,17 @@ const showHistoryModal = async (deviceId) => {
 
     // --- MODAL CLOSE LISTENERS ---
     scheduleCloseBtn.addEventListener('click', hideScheduleModal);
-    historyCloseBtn.addEventListener('click', hideHistoryModal);
+    // REMOVED: historyCloseBtn.addEventListener('click', hideHistoryModal);
     settingsCloseBtn.addEventListener('click', hideSettingsModal);
-    detailsCloseBtn.addEventListener('click', hideDetailsModal);
+    // REMOVED: detailsCloseBtn.addEventListener('click', hideDetailsModal);
     
     // Global listener for closing modals with ESC key
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             if (!scheduleModal.classList.contains('hidden')) hideScheduleModal();
-            if (!historyModal.classList.contains('hidden')) hideHistoryModal();
+            // REMOVED: historyModal close
             if (!settingsModal.classList.contains('hidden')) hideSettingsModal();
-            if (!detailsModal.classList.contains('hidden')) hideDetailsModal();
+            // REMOVED: detailsModal close
         }
     });
 
