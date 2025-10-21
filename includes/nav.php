@@ -28,7 +28,6 @@ if (isset($activePage) && !empty($activePage)) {
             $navItems = [
                 "index.php"     => ["Dashboard", ""],
                 "devices.php"   => ["Devices", ""],
-                "analytics.php" => ["Analytics", ""],
                 "budget.php"    => ["Budget", ""],
                 "settings.php"  => ["Settings", ""],
                 "feedback.php"  => ["Feedback", ""],

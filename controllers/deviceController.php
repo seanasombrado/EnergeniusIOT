@@ -38,6 +38,9 @@ switch ($action) {
     case 'countActive': // Added missing case for completeness
         handleCountActiveDevices($conn); 
         break;
+        case 'esp32_status': // <-- ADD THIS CASE
+        handleESP32GetStatus($conn);
+        break;
     default:
         echo json_encode(["success" => false, "message" => "Invalid action"]);
         break;
@@ -54,7 +57,7 @@ function handleAddDevice($conn) {
     $deviceName = $_POST['deviceName'] ?? '';
     $applianceType = $_POST['applianceType'] ?? '';
     $applianceLocation = $_POST['applianceLocation'] ?? '';
-    $powerConsumption = $_POST['powerConsumption'] ?? 0;
+    // REMOVED: $powerConsumption = $_POST['powerConsumption'] ?? 0;
     $status = 'active';
 
     // Validation: Hindi na kailangan i-check ang $userId dito dahil galing na sa session.
@@ -63,18 +66,18 @@ function handleAddDevice($conn) {
         return;
     }
 
-    if (!is_numeric($powerConsumption) || $powerConsumption < 0) {
-        echo json_encode(["success" => false, "message" => "Power consumption must be a valid number."]);
-        return;
-    }
+    // REMOVED: Validation for power consumption is no longer needed
 
     try {
+        // 💡 CHANGE 1: Removed 'daily_kwh' from the column list.
         $stmt = $conn->prepare("
-            INSERT INTO appliances (device_name, appliance_type, location, daily_kwh, start_time, end_time, status, User_id)
-            VALUES (?, ?, ?, ?, NULL, NULL, ?, ?)
+            INSERT INTO appliances (device_name, appliance_type, location, start_time, end_time, status, User_id)
+            VALUES (?, ?, ?, NULL, NULL, ?, ?)
         ");
+        
+        // 💡 CHANGE 2: Removed $powerConsumption from the execute array.
         // Ginagamit ang $userId na galing sa SESSION
-        $stmt->execute([$deviceName, $applianceType, $applianceLocation, $powerConsumption, $status, $userId]);
+        $stmt->execute([$deviceName, $applianceType, $applianceLocation, $status, $userId]);
 
         $deviceId = $conn->lastInsertId();
         $stmt = $conn->prepare("SELECT * FROM appliances WHERE device_id = ?");
@@ -110,7 +113,6 @@ function handleGetDevices($conn) {
                 'device_name' => $device['device_name'],
                 'appliance_type' => $device['appliance_type'],
                 'location' => $device['location'],
-                'daily_kwh' => (float)$device['daily_kwh'],
                 'status' => $device['status'],
                 'created_at' => $device['created_at'] ?? null,
                 'updated_at' => $device['updated_at'] ?? null,
@@ -138,7 +140,6 @@ function handleUpdateDevice($conn) {
     $deviceId = $_POST['deviceId'] ?? 0;
     $deviceName = $_POST['deviceName'] ?? '';
     $applianceLocation = $_POST['applianceLocation'] ?? '';
-    $powerConsumption = $_POST['powerConsumption'] ?? 0;
     $startTime = $_POST['startTime'] ?? null;
     $endTime = $_POST['endTime'] ?? null;
 
@@ -147,12 +148,7 @@ function handleUpdateDevice($conn) {
         return;
     }
 
-    if (!is_numeric($powerConsumption) || $powerConsumption < 0) {
-        echo json_encode(["success" => false, "message" => "Power consumption must be a valid number."]);
-        return;
-    }
-
-    try {
+        try {
         // Tiyakin na ang device ay pag-aari ng naka-login na user
         $stmt = $conn->prepare("SELECT device_id FROM appliances WHERE device_id = ? AND User_id = ?");
         $stmt->execute([$deviceId, $userId]);
@@ -161,12 +157,12 @@ function handleUpdateDevice($conn) {
             return;
         }
 
-        $stmt = $conn->prepare("
-            UPDATE appliances
-            SET device_name = ?, location = ?, daily_kwh = ?, start_time = ?, end_time = ?
-            WHERE device_id = ? AND User_id = ?
-        ");
-        $stmt->execute([$deviceName, $applianceLocation, $powerConsumption, $startTime, $endTime, $deviceId, $userId]);
+       $stmt = $conn->prepare("
+        UPDATE appliances
+        SET device_name = ?, location = ?
+        WHERE device_id = ? AND User_id = ?
+    ");
+    $stmt->execute([$deviceName, $applianceLocation, $deviceId, $userId]);
 
         $stmt = $conn->prepare("SELECT * FROM appliances WHERE device_id = ?");
         $stmt->execute([$deviceId]);
@@ -426,6 +422,43 @@ function handleCountActiveDevices($conn) {
         echo json_encode(["success" => true, "total" => (int)$row['total']]);
     } catch (PDOException $e) {
         echo json_encode(["success" => false, "message" => "Count failed: " . $e->getMessage()]);
+    }
+}
+function handleESP32GetStatus($conn) {
+    // We use a fixed User ID because the ESP32 doesn't use sessions. 
+    // This ID must match the USER_ID defined in the ESP32 code.
+    $userId = $_REQUEST['user_id'] ?? 1; 
+
+    try {
+        // Fetch status of the first 3 devices (matching the LIMIT 3 logic in handleGetDevices)
+        $stmt = $conn->prepare("
+            SELECT status 
+            FROM appliances 
+            WHERE user_id = ? 
+            ORDER BY device_id ASC 
+            LIMIT 3
+        ");
+        $stmt->execute([$userId]);
+        $devices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Map the results to R1, R2, R3. If fewer than 3 devices exist, the rest default to 'inactive'.
+        $r1_status = $devices[0]['status'] ?? 'inactive';
+        $r2_status = $devices[1]['status'] ?? 'inactive';
+        $r3_status = $devices[2]['status'] ?? 'inactive';
+
+        // Prepare a lightweight JSON response for the ESP32
+        $response = [
+            // Convert database 'active'/'inactive' to ESP32's expected 'on'/'off'
+            "r1" => strtolower($r1_status) === 'active' ? 'on' : 'off',
+            "r2" => strtolower($r2_status) === 'active' ? 'on' : 'off',
+            "r3" => strtolower($r3_status) === 'active' ? 'on' : 'off'
+        ];
+
+        echo json_encode($response);
+    } catch (PDOException $e) {
+        error_log("ESP32 status fetch error: " . $e->getMessage());
+        // Return a safe default state on error
+        echo json_encode(["r1" => "off", "r2" => "off", "r3" => "off"]);
     }
 }
 ?>

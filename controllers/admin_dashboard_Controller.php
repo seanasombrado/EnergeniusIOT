@@ -4,7 +4,7 @@ require_once '../configs/db_connect.php'; // Ensure this path is correct and est
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['admin_email'])) {
+if (!isset($_SESSION['admin_id']) || $_SESSION['admin_id'] !== true) {
     // Return 401 so frontend knows authentication is required
     http_response_code(401);
     echo json_encode(["success" => false, "message" => "Not logged in as admin"]);

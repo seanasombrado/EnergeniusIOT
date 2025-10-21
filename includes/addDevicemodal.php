@@ -1,22 +1,18 @@
-<!-- Add Device Modal -->
 <div id="addDeviceModal"
      class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
     <div class="bg-white rounded-xl p-8 w-full max-w-lg relative mx-auto">
         <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Add New Device</h2>
 
-        <!-- Add Device Form -->
         <form id="addDeviceForm" class="space-y-6">
             
-            <!-- Device Name -->
             <div>
                 <label for="deviceName" class="block text-sm font-medium text-gray-700 mb-1">Device Name</label>
                 <input type="text" id="deviceName" name="deviceName"
-                       placeholder="e.g., Living Room TV"
-                       class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                       required>
+                        placeholder="e.g., Living Room TV"
+                        class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
+                        required>
             </div>
 
-            <!-- Appliance Type -->
             <div>
                 <label for="applianceType" class="block text-sm font-medium text-gray-700 mb-1">Appliance Type</label>
                 <select id="applianceType" name="applianceType"
@@ -32,7 +28,6 @@
                 </select>
             </div>
 
-            <!-- Location -->
             <div>
                 <label for="applianceLocation" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
                 <select id="applianceLocation" name="applianceLocation"
@@ -48,19 +43,6 @@
                 </select>
             </div>
 
-            <!-- Power Consumption -->
-            <div>
-                <label for="powerConsumption" class="block text-sm font-medium text-gray-700 mb-1">
-                    Estimated Daily Energy Use (kWh)
-                </label>
-                <input type="number" id="powerConsumption" name="powerConsumption"
-                       placeholder="e.g., 2.5" step="0.01"
-                       class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
-                       readonly required>
-                <span id="powerConsumptionMessage" class="mt-2 block text-sm text-gray-500"></span>
-            </div>
-
-            <!-- Buttons -->
             <div class="flex justify-end space-x-4 pt-4">
                 <button type="button" id="cancelBtn"
                         class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Cancel</button>
@@ -83,17 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.getElementById('cancelBtn');
     const addDeviceForm = document.getElementById('addDeviceForm');
     const applianceTypeSelect = document.getElementById('applianceType');
-    const powerConsumptionInput = document.getElementById('powerConsumption');
-    const powerConsumptionMessage = document.getElementById('powerConsumptionMessage');
 
-    // Predefined appliance energy usage (kWh/day)
-    const applianceEstimates = {
-        'refrigerator': 1.5,
-        'air-conditioner': 8.0,
-        'washing-machine': 2.3,
-        'television': 0.5,
-        'lamp': 0.2
-    };
 
     // ✅ Show Modal
     if (addDeviceBtn) {
@@ -107,8 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideModal = () => {
         addDeviceModal.classList.add('hidden');
         addDeviceForm.reset();
-        powerConsumptionInput.setAttribute('readonly', true);
-        powerConsumptionMessage.textContent = '';
         document.body.classList.remove('overflow-hidden');
     };
 
@@ -118,25 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ✅ Auto-fill Power Consumption
-    applianceTypeSelect.addEventListener('change', e => {
-        const selected = e.target.value;
-        const estimate = applianceEstimates[selected];
-
-        if (estimate !== undefined) {
-            powerConsumptionInput.value = estimate;
-            powerConsumptionInput.setAttribute('readonly', true);
-            powerConsumptionMessage.textContent = `Estimated average for a typical ${selected.replace('-', ' ')}.`;
-        } else if (selected === 'other') {
-            powerConsumptionInput.value = '';
-            powerConsumptionInput.removeAttribute('readonly');
-            powerConsumptionMessage.textContent = 'Enter custom kWh for this device.';
-        } else {
-            powerConsumptionInput.value = '';
-            powerConsumptionInput.setAttribute('readonly', true);
-            powerConsumptionMessage.textContent = '';
-        }
-    });
-
     // ✅ Submit Form to PHP Backend
     addDeviceForm.addEventListener('submit', e => {
         e.preventDefault();

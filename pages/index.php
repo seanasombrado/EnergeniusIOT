@@ -23,7 +23,7 @@ if (isset($_SESSION['user_id'])) {
          if ($themeResult && $themeResult['theme']) {
             $savedTheme = $themeResult['theme']; // Store the actual theme ('light', 'dark', or 'system')
             
-            // Only apply 'dark' if the theme is explicitly 'dark'
+            // Only apply 'dark' if the theme is explicitly 'dark'\
             if ($savedTheme === 'dark') {
                 $userTheme = 'dark';
             }
@@ -41,7 +41,6 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Energy Dashboard</title>
-    <!-- Use Tailwind CSS CDN for a single-file application -->
     <link href="../assets/css/output.css" rel="stylesheet">
      <script src="../assets/js/theme.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -61,7 +60,6 @@ if (isset($_SESSION['user_id'])) {
 
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 dark:bg-gray-900">
                 <div class="space-y-6">
-                    <!-- Page header -->
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div>
                              <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
@@ -72,12 +70,10 @@ if (isset($_SESSION['user_id'])) {
                             </p>
                         </div>
                         <div class="flex space-x-2 mt-4 md:mt-0">
-                            <!-- Time Period Dropdown -->
                             <div class="relative inline-block text-left" id="time-period-dropdown">
                                 <div>
                                     <button type="button" class="inline-flex items-center justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500" id="dropdown-button" aria-haspopup="true" aria-expanded="false">
                                         <span id="dropdown-text">Last 7 days</span>
-                                        <!-- ChevronDownIcon SVG -->
                                         <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                         </svg>
@@ -98,19 +94,16 @@ if (isset($_SESSION['user_id'])) {
                         </div>
                     </div>
 
-                    <!-- Stats cards -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
-                        <!-- Current Usage Card -->
                         <div class="bg-white rounded-lg shadow-lg p-5 dark:bg-gray-800">
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <p class="text-gray-500 text-sm dark:text-gray-400">Current Usage</p>
+                                    <p class="text-gray-500 text-sm dark:text-gray-400">Current Usage (Kwh)</p>
                                     <div class="flex items-end">
                                         <h3 id="current-usage-value" class="text-2xl font-bold text-gray-800 mr-2 dark:text-white">
                                             3.5 kWh
                                         </h3>
                                         <span class="text-green-500 text-sm flex items-center">
-                                            <!-- TrendingDownIcon SVG -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
                                                 <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
                                                 <polyline points="16 17 22 17 22 11"></polyline>
@@ -119,16 +112,64 @@ if (isset($_SESSION['user_id'])) {
                                         </span>
                                     </div>
                                 </div>
+                                
                                 <div class="bg-blue-100 rounded-full p-2">
-                                    <!-- ZapIcon SVG -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-blue-600">
                                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                                     </svg>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Monthly Usage Card -->
+                         <div class="bg-white rounded-lg shadow-lg p-5 dark:bg-gray-800">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 text-sm dark:text-gray-400">Current Usage (Voltage)</p>
+                                    <div class="flex items-end">
+                                        <h3 id="current-usage-voltage" class="text-2xl font-bold text-gray-800 mr-2 dark:text-white">
+                                            3.5 V
+                                        </h3>
+                                        <span class="text-green-500 text-sm flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
+                                                <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+                                                <polyline points="16 17 22 17 22 11"></polyline>
+                                            </svg>
+                                            12%
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-blue-100 rounded-full p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-blue-600">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="bg-white rounded-lg shadow-lg p-5 dark:bg-gray-800">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 text-sm dark:text-gray-400">Current Usage (Amperes)</p>
+                                    <div class="flex items-end">
+                                        <h3 id="current-usage-amps" class="text-2xl font-bold text-gray-800 mr-2 dark:text-white">
+                                            3.5 A
+                                        </h3>
+                                        <span class="text-green-500 text-sm flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
+                                                <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+                                                <polyline points="16 17 22 17 22 11"></polyline>
+                                            </svg>
+                                            12%
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-blue-100 rounded-full p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-blue-600">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                         <div class="bg-white rounded-lg shadow-lg p-5 dark:bg-gray-800">
                             <div class="flex justify-between items-center">
                                 <div>
@@ -138,7 +179,6 @@ if (isset($_SESSION['user_id'])) {
                                             245 kWh
                                         </h3>
                                         <span class="text-green-500 text-sm flex items-center">
-                                            <!-- TrendingDownIcon SVG -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
                                                 <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
                                                 <polyline points="16 17 22 17 22 11"></polyline>
@@ -148,7 +188,6 @@ if (isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="bg-purple-100 rounded-full p-2">
-                                    <!-- CalendarIcon SVG -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-purple-600">
                                         <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -159,7 +198,6 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                         </div>
 
-                        <!-- Estimated Bill Card -->
                         <div class="bg-white rounded-lg shadow-lg p-5 dark:bg-gray-800">
                             <div class="flex justify-between items-center">
                                 <div>
@@ -169,7 +207,6 @@ if (isset($_SESSION['user_id'])) {
                                             ₱4,300
                                         </h3>
                                         <span class="text-green-500 text-sm flex items-center">
-                                            <!-- TrendingDownIcon SVG -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
                                                 <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
                                                 <polyline points="16 17 22 17 22 11"></polyline>
@@ -179,7 +216,6 @@ if (isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="bg-green-100 rounded-full p-2">
-                                    <!-- PesoIcon SVG -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-green-600">
                                       <path d="M21 17.5c-3.1-2-5.4-3.5-7.5-3.5H9.5a3.5 3.5 0 0 1 0-7h7.1c3.1 2 5.4 3.5 7.5 3.5"></path>
                                       <path d="M12 2v20"></path>
@@ -188,7 +224,6 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                         </div>
 
-                        <!-- Active Devices Card -->
                         <div class="bg-white rounded-lg shadow-lg p-5 dark:bg-gray-800">
                             <div class="flex justify-between items-center">
                                 <div>
@@ -198,7 +233,6 @@ if (isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="bg-yellow-100 rounded-full p-2">
-                                    <!-- Custom icon placeholder since no specific icon was defined -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-yellow-600">
                                         <path d="M12 2v20"></path>
                                         <path d="M17 5H7"></path>
@@ -209,7 +243,6 @@ if (isset($_SESSION['user_id'])) {
                         </div>
                     </div>
 
-                    <!-- Energy usage chart -->
                     <div class="bg-white rounded-lg shadow-lg dark:bg-gray-800">
                         <div class="p-5 border-b border-gray-200 dark:border-gray-700">
                             <div class="flex justify-between items-center">
@@ -223,9 +256,7 @@ if (isset($_SESSION['user_id'])) {
                         </div>
                     </div>
 
-                    <!-- Active devices and budget section -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
-                        <!-- Active devices list -->
                         <div class="lg:col-span-2 bg-white rounded-lg shadow-lg dark:bg-gray-800">
                             <div class="p-5 border-b border-gray-200 dark:border-gray-700">
                                 <div class="flex justify-between items-center">
@@ -240,11 +271,9 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                             <div class="p-5 divide-y divide-gray-200 ">
                                 <div id="device-list" class="space-y-4 ">
-                                    <!-- Device items will be populated here via JavaScript -->
-                                </div>
+                                    </div>
                             </div>
                         </div>
-                        <!-- Budget progress -->
                         <div class="bg-white rounded-lg shadow-lg dark:bg-gray-800">
                             <div class="p-5 border-b border-gray-200 dark:border-gray-700">
                                 <div class="flex justify-between items-center">
@@ -253,7 +282,6 @@ if (isset($_SESSION['user_id'])) {
                                     </h3>
                                     <button>
                                         <a href="budget.php" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                        <!-- MoreHorizontalIcon SVG -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-gray-400">
                                             <circle cx="12" cy="12" r="1"></circle>
                                             <circle cx="19" cy="12" r="1"></circle>
@@ -264,8 +292,7 @@ if (isset($_SESSION['user_id'])) {
                                 </div>
                             </div>
                             <div class="p-5 space-y-5">
-                                <!-- BudgetProgressBar manually replicated -->
-<div id="budget-progress-container">
+                                <div id="budget-progress-container">
     <div class="flex justify-between text-sm font-medium mb-1">
         <span class="text-gray-700 dark:text-gray-400">Monthly Budget</span>
         <span id="budget-progress-amount" class="text-blue-600">₱0</span>
@@ -275,7 +302,6 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </div>
 
-<!-- Alert message -->
 <div id="budget-alert" class="bg-yellow-50 border border-yellow-100 rounded-lg p-4 flex items-start hidden">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-yellow-500 mr-3 mt-0.5">
         <path d="M10.29 2.06l10.95 19.95A2 2 0 0 1 19.29 22H4.71a2 2 0 0 1-1.95-2.99L13.71 2.06a2 2 0 0 1 3.94 0z"></path>
@@ -288,14 +314,12 @@ if (isset($_SESSION['user_id'])) {
     </div>
 </div>
 
-                                <!-- Energy Saving Tips -->
                                 <div class="border-t border-gray-200 pt-5 dark:border-gray-700">
                                     <h4 class="font-medium text-gray-800 mb-3 dark:text-white">
                                         Energy Saving Tips
                                     </h4>
                                     <ul class="space-y-2 text-sm">
                                         <li class="flex items-start">
-                                            <!-- MinusIcon SVG -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-blue-500 mr-2 mt-0.5">
                                                 <line x1="5" x2="19" y1="12" y2="12"></line>
                                             </svg>
@@ -304,7 +328,6 @@ if (isset($_SESSION['user_id'])) {
                                             </span>
                                         </li>
                                         <li class="flex items-start">
-                                            <!-- MinusIcon SVG -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-blue-500 mr-2 mt-0.5">
                                                 <line x1="5" x2="19" y1="12" y2="12"></line>
                                             </svg>
@@ -313,7 +336,6 @@ if (isset($_SESSION['user_id'])) {
                                             </span>
                                         </li>
                                         <li class="flex items-start">
-                                            <!-- PlusIcon SVG -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-blue-500 mr-2 mt-0.5">
                                                 <line x1="12" x2="12" y1="5" y2="19"></line>
                                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -332,7 +354,6 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
     
-    <!-- Modal for Energy Saving Tips -->
     <div id="tips-modal-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto dark:bg-gray-800"> ">
             <div class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
@@ -345,8 +366,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <div class="p-6">
                 <ul id="tips-list" class="space-y-4 text-gray-700 dark:text-gray-300">
-                    <!-- Tips will be populated here by JavaScript -->
-                </ul>
+                    </ul>
             </div>
         </div>
     </div>
@@ -380,7 +400,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!energyUsageChart) {
             const ctx = document.getElementById('energyUsageChart').getContext('2d');
             energyUsageChart = new Chart(ctx, {
-                type: 'line',
+                // FIXED: Chart type set to 'bar'
+                type: 'bar',
                 data: {
                     labels: data.labels,
                     datasets: [{
@@ -431,8 +452,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
+    // FIXED: Added currentVoltage and currentAmperage updates
     const updateStats = (stats) => {
         document.getElementById('current-usage-value').textContent = stats.currentUsage;
+        document.getElementById('current-usage-voltage').textContent = stats.currentVoltage; 
+        document.getElementById('current-usage-amps').textContent = stats.currentAmperage; 
         document.getElementById('monthly-usage-value').textContent = stats.monthlyUsage;
         document.getElementById('estimated-bill-value').textContent = stats.estimatedBill;
     };
@@ -474,14 +498,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data && data.data && data.data.length > 0) {
                     chartDataToRender = data;
                 } else {
-                    // If no data is available, create a "zero" data object
+                    // FIXED: Updated fallback data object with Volt/Amp default values
                     chartDataToRender = {
                         labels: [],
                         data: [],
                         unit: 'kWh',
                         title: `No Energy Usage Data Available`,
                         stats: {
-                            currentUsage: '0 kWh',
+                            currentUsage: '0.00 kWh',
+                            currentVoltage: '0.00 V',
+                            currentAmperage: '0.00 A',
                             monthlyUsage: '0 kWh',
                             estimatedBill: '₱0'
                         }

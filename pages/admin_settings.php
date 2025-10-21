@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Redirect to the logout script (assuming it's in this path)
-                window.location.href = '../pages/logout.php?admin=true';
+                window.location.href = '../controllers/logoutController.php?admin=true';
             }
         })
     });
